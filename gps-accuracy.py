@@ -25,8 +25,6 @@ def gpx_to_utm(filename):   # return arrays, X and Y, which are UTM coordinates 
                 coords.append(myProj(point.longitude, point.latitude))
     return coords
 
-
-
 ## MAIN ##
 args = get_args()
 print(args)
