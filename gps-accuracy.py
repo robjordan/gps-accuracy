@@ -26,9 +26,6 @@ def gpx_to_utm(filename):   # return arrays, X and Y, which are UTM coordinates 
     return coords
 
 
-# def toXY(gpx):
-
-
 ## MAIN ##
 args = get_args()
 print(args)
