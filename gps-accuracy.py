@@ -1,5 +1,6 @@
 import argparse
 import gpxpy
+import gpxpy.gpx
 from pyproj import Proj
 import numpy as np
 from pandas import DataFrame
@@ -9,6 +10,7 @@ import math
 
 # assume England - change this if you live elsewhere
 UTM_ZONE = '30U'
+myProj = Proj("+proj=utm +zone="+UTM_ZONE+", +north, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
 
 def get_args():
     parser = argparse.ArgumentParser(description='Measure GPS accuracy by comparing recorded track points with a planned route.', prog='gps-accuracy')
@@ -20,7 +22,6 @@ def get_args():
 
 def gpx_to_utm(filename):   # return arrays, X and Y, which are UTM coordinates of points in the GPX
     # convert points to XY in Universal Transverse Mercator (UTM) - assume England
-    myProj = Proj("+proj=utm +zone="+UTM_ZONE+", +north, +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
     coords = []
     t = gpxpy.parse(open(filename))
     for track in t.tracks:
@@ -28,6 +29,10 @@ def gpx_to_utm(filename):   # return arrays, X and Y, which are UTM coordinates 
             for point in segment.points:
                 coords.append(myProj(point.longitude, point.latitude))
     return coords
+
+def utm_to_gpx(p):
+    lon, lat = myProj(p[0], p[1], inverse=True)
+    return lat, lon
 
 def distance(a, b):
     # euclidian distance between two points a and b, which are (x, y) tuples
@@ -38,9 +43,54 @@ def distance_sqr(a, b):
     return (a[0]-b[0])**2 + (a[1]-b[1])**2
 
 def calculate_error(asqr, bsqr, csqr):
-    return math.sqrt(asqr - (((csqr+asqr-bsqr)**2)/(4 * csqr)))
+    if csqr == 0:
+        return asqr
+    else:
+        return math.sqrt(asqr - (((csqr+asqr-bsqr)**2)/(4 * csqr)))
+
+# For debug / test purposes, create a GPX file that visualises the track and errors
+class VisGpx:
+
+    def __init__(self):
+        self.gpx = gpxpy.gpx.GPX()
+        self.gpx_track = gpxpy.gpx.GPXTrack()
+        self.gpx.tracks.append(self.gpx_track)
+        self.gpx_segment = gpxpy.gpx.GPXTrackSegment()
+        self.gpx_track.segments.append(self.gpx_segment)
+        
+
+    def append(self, t, nearest, second_nearest, a_squared, b_squared, c_squared, e):
+        # Add three points to the track: T, the calculated error, and T again.
+        # Calculate the gradient and intercept of the route vector.
+        try:     # there's a risk of divide by zero errors - just pass if they occur
+            r_grad = (nearest[1] - second_nearest[1]) / (nearest[0] - second_nearest[0])
+            r_intercept = nearest[1] - r_grad * nearest[0]
+            # gradient of the error bar is -1/m
+            e_grad = -1.0 / r_grad
+            e_intercept = t[1] - e_grad * t[0]
+            # solve the two equations of form y = mx + c to find the intersection point
+            multiplier = - r_grad / e_grad
+            y_solution = (r_intercept + multiplier * e_intercept) / (multiplier + 1)
+            x_solution = (y_solution - r_intercept) / r_grad
+            e_endpoint = (x_solution, y_solution)
+            e_endpoint_lat, e_endpoint_lon = utm_to_gpx(e_endpoint)
+            t_lat, t_lon = utm_to_gpx(t)
+            self.gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(t_lat, t_lon))
+            self.gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(e_endpoint_lat, e_endpoint_lon))
+            self.gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(t_lat, t_lon))
+            try:
+                assert e == distance(t, e), "Distance mismatch"
+            except:
+                print("t: {}, nearest: {}, 2nd: {}, e_endpoint: {}, e: {}, distance: {}".format(t, nearest, second_nearest, e_endpoint, e, distance(t, e_endpoint)))
+        except:
+            print ("divide by zero")
+     
+    def finish(self):
+        open("__VisGPX.gpx", "w+").write(self.gpx.to_xml())
+
 
 ## MAIN ##
+vis = VisGpx()
 args = get_args()
 print(args)
 print(args.verbose)
@@ -71,7 +121,7 @@ for (p, a, i) in zip(track, distances, indexes):
     if i == 0:                      # first route point
         second_nearest = route[i+1]
         b_squared = distance_sqr(p, route[i+1])
-    elif i == len(route):           # last route point
+    elif i == len(route)-1:           # last route point
         second_nearest = route[i-1]
         b_squared = distance_sqr(p, route[i-1])
     else:                           # the general case: mid route point
@@ -93,7 +143,10 @@ for (p, a, i) in zip(track, distances, indexes):
 
     print("a: {}, b: {}, c: {}, e: {}".format(math.sqrt(a_squared), math.sqrt(b_squared), math.sqrt(c_squared), e))
 
+    # DEBUG Make a GPX file to visualise the error
+    vis.append(p, nearest, second_nearest, a_squared, b_squared, c_squared, e)
         
+vis.finish()
 
 
 #    d_predecessor = 
