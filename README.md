@@ -19,3 +19,11 @@ By Pythagoras, the equations of the two triangles are:
 ![Triangle one](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(1).gif)
 
 ![Triangle two](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(2).gif)
+
+By substituting the value of *e<sup>2</sup2>* from the first equation into the second, we can derive an expression for the first unknown, *m*, and thus also *m<sup>2</sup>:
+
+![Derivation of m](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(3).gif)
+
+Finally, we derive a formula to calculate *e* using only the known lengths, *a*, *b*, and *c*:
+
+![Derivation of e](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(4).gif)
