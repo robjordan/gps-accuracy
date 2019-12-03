@@ -24,6 +24,6 @@ By substituting the value of *e<sup>2</sup2>* from the first equation into the s
 
 ![Derivation of m](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(3).gif)
 
-Finally, by substiting *m<sup>2</sup>* back into th efirst equation, we derive a formula to calculate *e* using only the known lengths, *a*, *b*, and *c*:
+Finally, by substiting *m<sup>2</sup>* back into the first equation, we derive a formula to calculate *e* using only the known lengths, *a*, *b*, and *c*:
 
 ![Derivation of e](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(4).gif)
