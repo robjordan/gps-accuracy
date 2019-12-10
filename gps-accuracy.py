@@ -37,7 +37,7 @@ def gpx_to_utm(filename, prefix=None):
     intervals = []
 
     if prefix is not None:
-        print("{}.filename: {}".format(prefix, filename))
+        print("{}.filename\t{}".format(prefix, filename))
     t = gpxpy.parse(open(filename))
 
     for track in t.tracks:
@@ -55,23 +55,23 @@ def gpx_to_utm(filename, prefix=None):
             start_time = track_start
 
     if prefix is not None:
-        print("{}.num_points: {}".format(prefix, len(coords)))
-        print("{0}.distance: {1: .0f}".format(prefix, distance))
-        print("{}.start: {}".format(prefix, start_time))
-        print("{}.end: {}".format(prefix, end_time))
-        print("{}.intervals.mean: {}".format(
+        print("{}.num_points\t{}".format(prefix, len(coords)))
+        print("{0}.distance\t{1: .0f}".format(prefix, distance))
+        print("{}.start\t{}".format(prefix, start_time))
+        print("{}.end\t{}".format(prefix, end_time))
+        print("{}.intervals.mean\t{}".format(
             prefix,
             np.mean(intervals)))
-        print("{}.intervals.max: {}".format(
+        print("{}.intervals.max\t{}".format(
             prefix, np.max(intervals)))
     return coords
 
 
 def print_error_stats(errors):
     """Print a variety of stats characterising the track errors."""
-    print("errors.mean: {0: .2f}".format(np.mean(errors)))
-    print("errors.median: {0: .2f}".format(np.median(errors)))
-    print("errors.95th_percentile: {0: .2f}".format(
+    print("errors.mean\t{0: .2f}".format(np.mean(errors)))
+    print("errors.median\t{0: .2f}".format(np.median(errors)))
+    print("errors.95th_percentile\t{0: .2f}".format(
         np.percentile(errors, 95)))
 
 
