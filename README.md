@@ -32,7 +32,7 @@ The core of the algorithm is to find the nearest point on the planned route to e
 
 The GPS error for each point is calculated as follows.
 
-![Error calculation](https://github.com/robjordan/gps-accuracy/raw/master/error-case-1.svg)
+![Error calculation](./error-case-1.svg)
 
 The intended route is represented as a straight line between successive route
 points *R1* and *R2*. The GPS records a track point *T*. The error that we want
