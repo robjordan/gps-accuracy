@@ -1,6 +1,6 @@
 # gps-accuracy
 The purpose of this script is to quantify the accuracy of a GPS device by
-comparing the location of track points against points in the planned route.
+comparing the location of track points against points in the planned route. For details of the use of this script to assess the accuracy of a variety of GPS devices, please see [findings](https://robjordan.github.io/gps-accuracy/findings "Findings").
 
 Usage:
 ```
@@ -19,13 +19,6 @@ The output reports on the mean, median and 95% percentile distance from each GPX
 track point to the nearest point along the planned route. It also reports on the
 start and finish time of the track, the number of trackpoints and the mean/max
 interval between successive track points. 
-
-It is assumed that the trackpoints in the `route` file are closely-spaced, such
-that the intended route can be considered to follow a straight line between
-successive route points. We also make an assumption that &ndash; since the distances
-between points in the route and track are very small &ndash; the curvature of the
-earth can be ignored. The first step is therefore to convert the lat/long
-coordinates the route and track to XY coordinates (units are metres).
 
 The core of the algorithm is to find the nearest point on the planned route to
 each track point. There are two main scenarios:
@@ -58,3 +51,15 @@ each track point. There are two main scenarios:
 
 ![Error calculation](./error-illustration.svg)
 
+## Assumptions
+
+* Trackpoints in the `route` file are closely-spaced, such that the intended
+  route can be considered to follow a straight line between successive route
+  points. 
+* Since the distances between points in the route and track are very small, the
+  curvature of the earth can be ignored. The first step is therefore to convert
+  the lat/long coordinates the route and track to XY coordinates (units are
+  metres), and make distance calculations using Pythagoras theorem.
+* The base maps used to create the planned route are accurate; specifically that
+  the path of a road as described on the map accurately represents the path of
+  that map in the real world. 
