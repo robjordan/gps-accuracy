@@ -27,33 +27,32 @@ between points in the route and track are very small - the curvature of the
 earth can be ignored. The first step is therefore to convert the lat/long
 coordinates the route and track to XY coordinates (units are metres).
 
-The core of the algorithm is to find the nearest point on the planned route to each track point. There are two main scenarios:
+The core of the algorithm is to find the nearest point on the planned route to
+each track point. There are two main scenarios:
 
+1 The nearest point along the planned route coincides with a route point. This
+  is typically the case if the route is curving away from the track point under
+  consideration. This is illustrated below, in the case of track point T2, where
+  the error, e, is discovered by locating the nearest of all route points (R3)
+  and simply calculating the Euclidean distance between the two points. 
+  
+2 The nearest point along the planned route lies somewhere on a line between two
+  successive route points. This is illustrated below in the case of track point
+  T1, where the closest route point lies on the straight line between R1 and R2.
+  The error line, e, is perpendicular to the line segment R1-R2. The point of
+  intersection is found by considering the line R1-R2 as a linear equation y =
+  mx + c, which implies that the slope of the line e must be -1/m. We can solve
+  the resulting pair of simultaneous equations to find a point of intersection,
+  and thus find the error distance, e, which isthe Euclidean distance between T1
+  and the intersection. The complication is that we don't know which pair of
+  route points present the closest line segment to track point T1. The heuristic
+  method used, is to find the closest route point, R, to track point T, then
+  consider line segments between R and its two predecessors and two successors:
+  (R-2)-(R-1),  (R-1)-R, R-(R+1) and (R+1)-(R+2). For each segment, we calculate
+  a point of intersection between the line and its perpendicular through T. We
+  eliminate any candidates where the intersection is not between the successive
+  route points (for instance, point T3 to the extended line between R2 and R3)
+  and select from the remaining candidates the shortest error distance.
 
-The GPS error for each point is calculated as follows.
+![Error calculation](./error-illustration.svg)
 
-![Error calculation](./error-case-1.svg)
-
-The intended route is represented as a straight line between successive route
-points *R1* and *R2*. The GPS records a track point *T*. The error that we want
-to calculate is *e*, the perpendicular distance from *T* to the straight line
-joining *R1* and *R2*. To find *e*, we need to solve, by Pythagoras, the two
-right-angle triangles, one formed by *R1*, *T* and *e*, and the the other formed
-by *R2*, *T* and *e*. Because the coordinates of points *R1*, *R2* and *T* are
-known, we can also calculate the distances between the points: *a*, *b* and *c*.
-The unknowns are *e*, and *m*, which is the distance from *R1* to the point
-where line *e* intersects *R1*-*R2*.
-
-By Pythagoras, the equations of the two triangles are:
-
-![Triangle one](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(1).gif)
-
-![Triangle two](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(2).gif)
-
-By substituting the value of *e<sup>2</sup2>* from the first equation into the second, we can derive an expression for the first unknown, *m*, and thus also *m<sup>2</sup>*:
-
-![Derivation of m](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(3).gif)
-
-Finally, by substiting *m<sup>2</sup>* back into the first equation, we derive a formula to calculate *e* using only the known lengths, *a*, *b*, and *c*:
-
-![Derivation of e](https://github.com/robjordan/gps-accuracy/raw/master/CodeCogsEqn(4).gif)
