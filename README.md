@@ -2,9 +2,18 @@
 The purpose of this script is to quantify the accuracy of a GPS device by comparing the location of track points against points in the planned route.
 
 Usage:
-`gps-accuracy [-h] [-v] route track`
+```
+gps-accuracy [-h] [-d] route track
 
-Where `route` and `track` are gpx track files.
+positional arguments:
+  route        filename of route (GPX track format)
+  track        filename of track (GPX track format)
+
+optional arguments:
+  -h, --help   show this help message and exit
+  -d, --debug  generate debug output, including a GPX file visualising
+               tracking errors
+```
 
 It is assumed that the trackpoints in the `route` file are closely-spaced, such that the intended route can be considered to follow a straight line between successive route points. We also make an assumption that - since the distances between points in the route and track are very small - the curvature of the earth can be ignored. The first step is therefore to convert the lat/long coordinates the route and track to XY coordinates (units are metres).
 

@@ -19,7 +19,11 @@ def get_args():
     parser = argparse.ArgumentParser(
         description='Measure GPS accuracy by comparing recorded track points with a planned route.',
         prog='gps-accuracy')
-    parser.add_argument('-d', '--debug', action='store_true', help='debug')
+    parser.add_argument(
+        '-d', 
+        '--debug', 
+        action='store_true', 
+        help='generate debug output, including a GPX file visualising tracking errors')
     parser.add_argument('route', help='filename of route (GPX track format)')
     parser.add_argument('track', help='filename of track (GPX track format)')
     args = parser.parse_args()
