@@ -51,6 +51,11 @@ each track point. There are two main scenarios:
 
 ![Error calculation](./images/error-illustration.svg)
 
+The following image visualises the errors between a section of the planned route
+(red) and the recorded track (blue).
+
+![Error visualisation](./images/error-visualisation.png)
+
 ## Assumptions
 
 * Trackpoints in the `route` file are closely-spaced, such that the intended
