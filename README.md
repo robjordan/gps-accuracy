@@ -49,7 +49,7 @@ each track point. There are two main scenarios:
    between R2 and R3) and select from the remaining candidates the shortest
    error distance.
 
-![Error calculation](./error-illustration.svg)
+![Error calculation](./images/error-illustration.svg)
 
 ## Assumptions
 
