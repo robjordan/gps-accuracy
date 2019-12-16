@@ -1,23 +1,22 @@
-# What did we discover about the tracking accuracy of GPS devices?
+# What did we learn about the tracking accuracy of GPS devices?
 
 The motivation for this piece of work was to discover whether there is any
 significant difference in the ability of GPS devices to acccurately track a
 planned route. The devices include popular dedicated GPS devices from Garmin and
 Lezyne, several Android phones, and two home-built GPS devices. I had some
 concerns about the accuracy of my home-built devices, and also one of my Android
-phones, and therefore wanted an objective way to evaluate the accuracy of
-devices. To do so, I developed [a Python
-script](https://github.com/robjordan/gps-accuracy) to measure the accuracy of
-each device.
+phones, and therefore wanted an objective way to evaluate their accuracy. To
+this end, I developed [a Python
+script](https://github.com/robjordan/gps-accuracy).
 
 ## The devices
 
 ### [Garmin Edge 605](https://wiki.openstreetmap.org/wiki/Garmin/Edge_series#Edge_605)
 Introduced in 2008, this item purchased in 2010, it was marketed as a 'cycle
-computer', i.e. targetted more at sport cyclists, though the 605 lacks the ANT+
+computer', i.e. targetted at sport cyclists, though the 605 lacks the ANT+
 sensors of the more popular 705 (for heart rate, power, cadence tracking, etc). 
 * Powered by an internal rechargeable lithium ion battery. 
-* The GPS chipset is SiRFstar III. 
+* The GPS chipset is [SiRFstar III](https://wiki.openstreetmap.org/wiki/SiRFstar_III). 
 * The device tracks
   [GPS](https://en.wikipedia.org/wiki/Global_Positioning_System) satellites but
   not [GLONASS](https://en.wikipedia.org/wiki/GLONASS). 
@@ -125,15 +124,15 @@ The goals are the same as the first home-made tracker, but with longer battery l
 ## The test procedure
 
 To test the devices, I planned a 60km bike route, on-road, through a mix of
-urban, open rural, and wooded areas. I treated the outbound and return legs,
-which were about 30km each via different routes, as separate experiments. I
+urban, open rural, and wooded areas. I treated the outbound and return legs &ndash;
+about 30km each via different routes &ndash; as separate experiments. I
 attached the Garmin and Lezyne devices, as well as the Ruggex phone, to
 handlebars. The other phones and the hand-built devices were in rear pockets of
 my jersey. (It would be desirable for future experiments to bar-mount the
 devices consistently). 
 
 After the ride, I gathered the GPX tracks from each device, cropped them
-slightly to ensure that all track points were within the bounds of the planned
+slightly to ensure that all track points are within the bounds of the planned
 route, and begin and end while the bike was in motion.
 
 Each track was then analysed using the
@@ -144,9 +143,9 @@ repository](https://github.com/robjordan/gps-accuracy/tree/master/gpx).
 
 ## Results
 
-For each route, and for each device that produced a satisfactory track, I
-calculated the mean and max interval, in seconds, between trackpoints, and the
-mean, median and 95% percentile error compared to the planned route. 
+For each route and each device, I calculated the mean and max interval between
+trackpoints (in seconds), and the mean, median and 95% percentile error compared
+to the planned route (in metres). 
 
 The Adafruit home-built failed to produce a route B track due to procedural
 error. The Ruggex failed to produce a route A track due to software issues.
@@ -172,4 +171,56 @@ The graph presents the mean, median and 95th percentile error for each device,
 on a log scale, ordered by median.
 
 ![Results](./results.png)
+
+## Interpretation
+
+All three dedicated GPS devices (Garmin 605, Garmin eTrex and Lezyne) and the
+Moto G3 and Xiaomi phones produce tracks that are more than adequate. Median
+errors are less than 4 metres, which is to say that the track runs within the
+width of the road most of the time. 95% of track points are within 11 metres.
+The dedicated devices seem to be very slightly more accurate than the phones,
+but none of these devices give any cause for concern for normal bike navigation
+and tracking purposes. 
+
+Both the Lezyne and the Moto G3 had a surprisingly long maximum interval between
+track points (around 3 minutes). Investigating this interval, it corresponds to
+a 3 minute roadside stop to try and fix a phone problem. So it's nothing to be
+concerned about.
+
+The Adafruit home-built device performs reasonably well, though a step down from
+the dedicated devices. It's possible that the lack of Glonass satellite
+reception impacts accuracy, or it may be due to the longer intervals between
+trackpoints (5 seconds: a conscious decision to extend battery life).
+
+The accuracy of the Openlog home-built device is poor. Median errors of 8-12
+metres and 95th percentile of 30-40 metres is not acceptable for most purposes,
+though, as an emergency fallback to a main navigation device, it might be
+tolerated. The U-blox GPS chipset has a good reputation, but I suspect
+the poor accuracy might be due to the tiny ceramic antenna, carelessly-placed
+within the enclosure. It would be worth investigating alternative antennae or
+careful placement of the GPS module. Once again, to extend battery life, the
+device has been set up for an extended interval between track point (10
+seconds), and this may impact accuracy. More experimentation needed.
+
+The Ruggex phone was an abject failure. It has always been problematic, with a
+very long time to first fix, difficulty in holding the GPS signal, and quite
+large deviations while using it as a primary navigation device. In this test, it
+failed to generate a track from route A because OsmAnd persistently crashed. On
+route B, I used an alternative GPS logging app, but the signal was held so
+poorly that it generated only 28 trackpoints on the entire 30km return leg. The
+accuracy of these very sparse points was worse than any other device. Like the
+Adafruit, it only supports GPS satellites, and this may have an impact, but I
+also suspect the ruggedised case might sacrifice antenna placement or
+sensitivity. This device has provided reasonable service at times (it's been my
+main navigation tool for a year or so) but it's frustratingly error-prone. I
+intend to try installing Android 7 in case better GPS drivers might improve the
+situation, but I don't hold out much hope.
+
+## Summary
+
+The `gps-accuracy` tool has proven useful to make objective measurement of GPS
+device tracking accuracy. It's revealed that dedicated Garmin and Lezyne
+devices, and a couple of Android phones, are able to track very accurately. It's
+also revealed some problems with my home-built GPS devices, but also will allow
+me to be more scientific in testing possible improvements.
 
