@@ -3,7 +3,6 @@ import gpxpy
 import gpxpy.gpx
 from pyproj import Proj
 import numpy as np
-from pandas import DataFrame
 from scipy.spatial import cKDTree
 import itertools
 import math
