@@ -6,8 +6,9 @@ planned route. The devices include popular dedicated GPS devices from Garmin and
 Lezyne, several Android phones, and two home-built GPS devices. I had some
 concerns about the accuracy of my home-built devices, and also one of my Android
 phones, and therefore wanted an objective way to evaluate the accuracy of
-devices. To do so, I developed a Python script to measure the accuracy of each
-device.
+devices. To do so, I developed [a Python
+script](https://github.com/robjordan/gps-accuracy) to measure the accuracy of
+each device.
 
 ## The devices
 
@@ -88,7 +89,7 @@ phone built to meet IP68 water/dust protection standards, with built-in GPS.
 * Due to software issues it proved impossible to record track points every 1
   second using OsmAnd, so an alternative app, GPS Logger for Android, was used. 
 
-### Home-made GPS tracker number one 'Adafruit'
+### Hand-built GPS tracker number one: 'Adafruit'
 I built this one with the intention for it to be a simple, unattended, fallback
 GPS tracker, to ensure track points are captured on long rides, even if the
 primary GPS device fails or crashes. A key ambition was extended battery life in
@@ -105,7 +106,7 @@ a small package.
   with ceramic patch antenna.
 * The device tracks only GPS satellites (not Glonass, Galileo or Beidou).
 
-### Home-made GPS tracker number two 'Openlog'
+### Hand-built GPS tracker number two: 'Openlog'
 The goals are the same as the first home-made tracker, but with longer battery life.
 * Logs for about 100 hours using a 2900mAh [Lithium Ion 18650
   cell](https://lygte-info.dk/review/batteries2012/Samsung%20INR18650-29E%202900mAh%20%28Blue%29%20UK.html).
@@ -121,4 +122,54 @@ The goals are the same as the first home-made tracker, but with longer battery l
   Antenna](https://store.uputronics.com/index.php?route=product/product&path=60_65&product_id=65).
 * The device tracks GPS satellites as well as Glonass, Galileo and Beidou.
 
+## The test procedure
+
+To test the devices, I planned a 60km bike route, on-road, through a mix of
+urban, open rural, and wooded areas. I treated the outbound and return legs,
+which were about 30km each via different routes, as separate experiments. I
+attached the Garmin and Lezyne devices, as well as the Ruggex phone, to
+handlebars. The other phones and the hand-built devices were in rear pockets of
+my jersey. (It would be desirable for future experiments to bar-mount the
+devices consistently). 
+
+After the ride, I gathered the GPX tracks from each device, cropped them
+slightly to ensure that all track points were within the bounds of the planned
+route, and begin and end while the bike was in motion.
+
+Each track was then analysed using the
+[`gps-accuracy.py`](https://github.com/robjordan/gps-accuracy) script.
+
+Route and track files can be found [within the Github
+repository](https://github.com/robjordan/gps-accuracy/tree/master/gpx).
+
+## Results
+
+For each route, and for each device that produced a satisfactory track, I
+calculated the mean and max interval, in seconds, between trackpoints, and the
+mean, median and 95% percentile error compared to the planned route. 
+
+The Adafruit home-built failed to produce a route B track due to procedural
+error. The Ruggex failed to produce a route A track due to software issues.
+
+|Device (route)|interval-mean (s)|interval-max (s)|error-mean (m)|error-median (m)|error-95th (m)|
+|---|---:|---:|---:|---:|---:|
+|Garmin-Edge-605 (B)|1.0|2.0|2.7|1.26|4.59|
+|Garmin-Etrex-30x (A)|6.1|34.0|2.29|1.63|6.13|
+|Garmin-Etrex-30x (B)|6.9|33.0|1.92|1.63|4.63|
+|Lezyne (B)|2.5|77.0|2.07|1.65|5.26|
+|Xiaomi (A)|1.6|4.0|2.69|2.19|6.96|
+|Garmin-Edge-605 (A)|1.0|4.0|2.86|2.55|6.38|
+|Xiaomi (B)|1.6|3.0|4.05|2.85|11.36|
+|Lezyne (A)|2.5|197.0|3.87|3.13|9.61|
+|MotoG3 (A)|2.7|216.0|3.64|3.31|8.19|
+|MotoG3 (B)|2.5|89.0|4.45|3.84|11.4|
+|Adafruit (A)|5.1|18.0|4.67|4.21|10.36|
+|Ruggex (B)|159.6|369.0|11.4|7.02|47.79|
+|Openlog (A)|10.0|10.0|11.5|8.84|30.22|
+|Openlog (B)|10.1|20.0|15.14|12.2|39.89|
+
+The graph presents the mean, median and 95th percentile error for each device,
+on a log scale, ordered by median.
+
+![Results](./results.png)
 
