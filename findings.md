@@ -57,7 +57,7 @@ life (up to 40 hours).
 
 <img src="images/xiaomi.jpg" title="Xiaomi Mi A2 Lite" align='right'>
 
-### [Xiaomi Mi A2 Lite Android phone](https://www.gsmarena.com/xiaomi_mi_a2_lite_(redmi_6_pro)-9247.php)
+### [Xiaomi Mi A2 Lite](https://www.gsmarena.com/xiaomi_mi_a2_lite_(redmi_6_pro)-9247.php)
 Introduced in 2018, this item purchased in 2019, it's a general-purpose Android
 phone, with built-in GPS. 
 * Running Android 9.
