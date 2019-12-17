@@ -204,7 +204,7 @@ a 3 minute roadside stop to try and fix a phone problem. So it's nothing to be
 concerned about.
 
 The Adafruit home-built device performs reasonably well, though a step down from
-the dedicated devices. It's possible that the lack of Glonass satellite
+the dedicated devices (median 4.2m, 95% 10.4m). It's possible that the lack of Glonass satellite
 reception impacts accuracy, or it may be due to the longer intervals between
 trackpoints (5 seconds: a conscious decision to extend battery life).
 
